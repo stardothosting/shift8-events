@@ -45,7 +45,7 @@ The markup that is generated encapsulates everything in a div container with the
 
 ### What else have you done?
 
-You can visit [our website](https://www.shift8web.ca "Toronto Web Design") to see! :)
+We do [web design and development in Toronto](https://www.shift8web.ca "Toronto Web Design")! :)
 
 ### Screenshots 
 
