@@ -1,0 +1,16 @@
+#wp-shift8_event_shortdesc-editor-container {
+	height:200px !important;
+}
+
+.shift8-event-admin-table {
+	width:100%;
+}
+
+.shift8-event-admin-table td {
+	vertical-align:middle !important;
+}
+.shift8-event-admin-table td:nth-child(even) { 
+	padding: 25px 0 25px 0;
+	border-bottom:1px dashed #666666;
+	vertical-align:middle;
+}
