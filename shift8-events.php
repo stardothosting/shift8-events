@@ -107,7 +107,7 @@ function display_shift8_event_meta_box( $shift8_events ) {
                 </tr>
                 <tr>
                 <td style="width: 20%">Event Featured</td>
-                <td><input type="checkbox" name="shift8_event_featured" value="<?php echo $event_featured;?>" <?php echo($event_featured == 'true' ? 'checked' : null)?> /></td>
+                <td><input type="checkbox" name="shift8_event_featured" value="true" <?php echo($event_featured == 'true' ? 'checked' : null)?> /></td>
                 </tr>
 	</table>
 	<?php
@@ -152,7 +152,7 @@ function add_shift8_event_fields( $shift8_event_id, $shift8_events ) {
 	}
 }
 
-
+// Main Shortcode
 function shift8_get_events($atts) {
 	extract(shortcode_atts(array(
 		'number' => '5'
@@ -162,3 +162,57 @@ function shift8_get_events($atts) {
 }
 
 add_shortcode('shift8_event', 'shift8_get_events');
+
+
+// Shortcode for featured events
+function shift8_featured_events_shortcode($atts){
+	extract(shortcode_atts(array(
+		'numposts' => '1',
+	), $atts));
+
+	$args = array(
+		'numberposts' => $numposts,
+		'posts_per_page' => 1,
+		'post_type' => 'shift8_events',
+		'post_status' => 'publish',
+		'orderby' => 'meta_value',
+		'meta_key' => 'shift8_event_date',
+		'meta_value' => date("Ymd"),
+		'meta_compare' => '>=',
+		'order' => 'ASC',
+	);
+
+	global $post;
+	$out = '';
+	$posts = new WP_Query($args);
+	if ($posts->have_posts()) {
+		while ($posts->have_posts()) {
+			$posts->the_post();
+			// get event image
+			$event_image = get_post_meta($post->ID, 'shift8_event_image')[0];
+			$event_image_id = shift8_get_image_id($event_image);
+			$event_image_display = null;
+			if (!empty($event_image)) {
+				$event_image_display = '<div class="tgh-eventhome-image-cropped" style="background-image: url(\'' . $event_image . '\');"></div>';
+			}
+			// convert event time
+			$event_date = date('D M d Y', strtotime(get_post_meta($post->ID, 'shift8_event_date')));
+			$event_date_trigger = strtolower(date('M-Y', strtotime(get_post_meta($post->ID, 'shift8_event_date'))));
+			$event_time = date('h:i a', strtotime(get_post_meta($post->ID, 'shift8_event_time')));
+			// price
+			$event_price = get_post_meta($post->ID, "shift8_event_price")[0];
+
+			$out .= '<div class="tgh-feat-eventhome-container featured-event-'.get_the_ID().' row">
+				<div class="tgh-feathome-left col-lg-6">'.$event_image_display.'</div>
+				<div class="tgh-feathome-right col-lg-6"><div class="tgh-feat-eventhome-info"><ul><span class="tgh-feat-calendar-eventhome"><li>'.$event_date.'</li><li>'.$event_time.'</li><li>'.get_the_title().'</li><li>'.($event_price > 0 ? "$" . $event_price : "$FREE") . '</li><li><div class="tgh-eventhome-button"><a href="'.get_permalink().'"><button>Info</button></a></div></li></ul></div></div>
+				</div>';
+		}
+	} else {
+		return;
+	}
+	wp_reset_query();
+	return html_entity_decode($out);
+
+}
+
+add_shortcode('shift8_event_featured', 'shift8_featured_events_shortcode');

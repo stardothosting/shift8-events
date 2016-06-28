@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {        
 	// date + time picker triggers
 	jQuery('#datepicker').datepicker({
-		dateFormat : 'dd-mm-yy'
+		dateFormat : 'yymmdd'
 	});
 	jQuery('#timepicker').wickedpicker();
 	// media uploader
