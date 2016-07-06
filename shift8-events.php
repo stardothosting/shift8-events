@@ -176,9 +176,19 @@ function shift8_featured_events_shortcode($atts){
 		'post_type' => 'shift8_events',
 		'post_status' => 'publish',
 		'orderby' => 'meta_value',
-		'meta_key' => 'shift8_event_date',
-		'meta_value' => date("Ymd"),
-		'meta_compare' => '>=',
+		'meta_query' => array(
+					'relation'    => 'AND',
+					array(
+						'key'     => 'shift8_event_date',
+						'value'	  => date("Ymd"),
+						'compare' => '>=',
+					),
+					array(
+						'key'     => 'shift8_event_featured',
+						'value'   => 'true',
+						'compare' => '=',
+					),
+				),
 		'order' => 'ASC',
 	);
 
@@ -216,3 +226,11 @@ function shift8_featured_events_shortcode($atts){
 }
 
 add_shortcode('shift8_event_featured', 'shift8_featured_events_shortcode');
+
+// Shortcode for main events page
+function shift8_events_shortcode($atts){
+
+
+}
+
+add_shortcode('shift8_event', 'shift8_events_shortcode');
